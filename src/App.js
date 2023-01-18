@@ -12,24 +12,34 @@ class App extends React.Component {
   }
 
   render() {
-    let txt = this.props.txt;
     return (
       <div>
-        <h1>{this.state.txt} - {this.state.cat}</h1>
-        <Widget update={this.update.bind(this)}/>
+        <Title text="Practicing React"/>
+        <p>{this.state.txt} - {this.state.cat}</p>
+        <TextBox update={this.update.bind(this)}/>
+        <div><Button>I <Heart/> React</Button></div>
       </div>
     )
   }
 
   // Every time this custom method is run, the render method is re-run.
   update(event) {
-    this.setState({txt: event.target.value});
+    this.setState({
+      txt: event.target.value,
+      cat: this.state.cat + 1
+    });
   }
 }
 
 
-// New state-less function component.
-const Widget = (props) => <input type="text" onChange={props.update.bind(this)}/>
+// State-less function components.
+const Title = (props) => <h1>Summer's App: {props.text}</h1>
+
+const TextBox = (props) => <input type="text" onChange={props.update.bind(this)}/>
+
+const Button = (props) => <button>{props.children}</button>
+
+const Heart = () => <span>&hearts;</span>
 
 
 App.propTypes = {
@@ -39,6 +49,17 @@ App.propTypes = {
 
 App.defaultProps = {
   txt: "this is the default txt"  // This is overridden by the App text in index.js.
+}
+
+Title.propTypes = {
+  text(props, propName) {
+    if (!(propName in props)) {
+      return new Error(`Missing ${propName}`);
+    }
+    if (props[propName].length < 3) {
+      return new Error(`${propName} is too short.`);
+    }
+  }
 }
 
 
